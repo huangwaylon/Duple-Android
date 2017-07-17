@@ -20,9 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.waylonhuang.notifydesktop.setupwizard.WizardFragment;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String NAV_DRAWER_SELECT_KEY = "NAV_DRAWER_SELECT_KEY";
     private int navDrawerSelectedIndex;
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,16 +100,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Fragment fragment;
         if (id == R.id.nav_home) {
-            fragment = HistoryFragment.newInstance();
+            fragment = HomeFragment.newInstance();
+            fab.show();
         } else if (id == R.id.nav_apps) {
             fragment = AppListFragment.newInstance();
+            fab.hide();
         } else if (id == R.id.nav_setup) {
-            fragment = SetupFragment.newInstance();
+            fragment = WizardFragment.newInstance();
+            fab.hide();
         } else if (id == R.id.nav_history) {
             fragment = HistoryFragment.newInstance();
+            fab.hide();
         } else {
             // Settings.
             fragment = SettingsFragment.newInstance();
+            fab.hide();
         }
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment, "TAG").commit();
 

@@ -13,10 +13,8 @@ import android.service.notification.StatusBarNotification;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -31,7 +29,7 @@ import static com.waylonhuang.notifydesktop.SetupFragment.PREFS_FILE;
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener1 extends NotificationListenerService {
+public class NotificationListener2 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,6 +48,10 @@ public class NotificationListener1 extends NotificationListenerService {
 
         SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
         boolean signedIn = settings.getBoolean("signedIn", false);
+        String offApps = settings.getString("offApps", "");
+        String titleOnlyApps = settings.getString("titleOnlyApps", "");
+        String[] offArr = offApps.split(",", -1);
+        String[] titleApps = titleOnlyApps.split(",", -1);
 
         if (!signedIn) {
             // System.out.println("Not signed in!");
@@ -64,8 +66,12 @@ public class NotificationListener1 extends NotificationListenerService {
 
         long postTime = sbn.getPostTime();
 
-        PackageManager packageManager = getApplicationContext().getPackageManager();
         String packageName = sbn.getPackageName();
+        if (Arrays.asList(offArr).contains(packageName)) {
+            return;
+        }
+
+        PackageManager packageManager = getApplicationContext().getPackageManager();
         String appName = "";
         try {
             appName = (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA));
@@ -78,12 +84,16 @@ public class NotificationListener1 extends NotificationListenerService {
         String title = extras.getString("android.title");
         String text = extras.getString("android.text");
 
+        if (Arrays.asList(titleApps).contains(packageName)) {
+            text = "";
+        }
+
         // Send to server.
         post(uid, appName, title, text, postTime);
 
         long _id = System.currentTimeMillis();
 
-        postTime += Math.floor(Math.random()*86400000*20);
+        postTime += Math.floor(Math.random()*86400000*10);
         NotificationItem item = new NotificationItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
 
         // Save the notification.

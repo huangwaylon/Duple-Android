@@ -1,6 +1,8 @@
 package com.waylonhuang.notifydesktop;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +44,7 @@ public class HistoryFragment extends Fragment {
 
         final NotificationSQLiteHelper helper = NotificationSQLiteHelper.getInstance(getActivity());
 
-        List<NotificationItem> appItems = organizeItems(helper);
-        final FlexibleAdapter<NotificationItem> adapter = new FlexibleAdapter<>(appItems);
+        final FlexibleAdapter<NotificationItem> adapter = new FlexibleAdapter<>(new ArrayList<NotificationItem>());
         final FastScroller fastScroller = (FastScroller) view.findViewById(R.id.his_list_fs);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.his_list_rv);
@@ -71,9 +73,16 @@ public class HistoryFragment extends Fragment {
             }
         });
 
+        adapter.updateDataSet(organizeItems(helper));
+
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Snackbar.make(view, "Pull down to refresh", Snackbar.LENGTH_LONG).setAction("Okay", null).show();
+    }
 
     private List<NotificationItem> organizeItems(NotificationSQLiteHelper helper) {
         List<NotificationItem> appItems = helper.getAllItems(getActivity());

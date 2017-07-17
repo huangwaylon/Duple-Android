@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,10 +26,29 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
 
     private boolean isOff, isTitleOnly;
 
-    public AppItem(String appName, String packageName, Drawable icon) {
+    public AppItem(String appName, String packageName, Drawable icon, boolean isOff, boolean isTitleOnly) {
         this.appName = appName;
         this.packageName = packageName;
         this.icon = icon;
+
+        this.isOff = isOff;
+        this.isTitleOnly = isTitleOnly;
+    }
+
+    public boolean isOff() {
+        return isOff;
+    }
+
+    public boolean isTitleOnly() {
+        return isTitleOnly;
+    }
+
+    public void setOff(boolean off) {
+        isOff = off;
+    }
+
+    public void setTitleOnly(boolean titleOnly) {
+        isTitleOnly = titleOnly;
     }
 
     public Drawable getIcon() {
@@ -78,6 +98,39 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
         holder.app_name_tv.setText(appName);
         holder.app_detail_tv.setText(packageName);
 
+        if (isOff && isTitleOnly) {
+            holder.app_off.setVisibility(View.VISIBLE);
+            holder.app_title_only.setVisibility(View.VISIBLE);
+
+            holder.app_name_tv.setPadding(0, 0, 60, 0);
+            setMargins(holder.app_title_only, 0, 0, 60, 0);
+        } else if (isOff) {
+            holder.app_off.setVisibility(View.VISIBLE);
+            holder.app_title_only.setVisibility(View.GONE);
+
+            holder.app_name_tv.setPadding(0, 0, 40, 0);
+            setMargins(holder.app_title_only, 0, 0, 60, 0);
+        } else if (isTitleOnly) {
+            holder.app_off.setVisibility(View.GONE);
+            holder.app_title_only.setVisibility(View.VISIBLE);
+
+            holder.app_name_tv.setPadding(0, 0, 30, 0);
+            setMargins(holder.app_title_only, 0, 0, 0, 0);
+        } else {
+            holder.app_off.setVisibility(View.GONE);
+            holder.app_title_only.setVisibility(View.GONE);
+
+            holder.app_name_tv.setPadding(0, 0, 0, 0);
+            setMargins(holder.app_title_only, 0, 0, 60, 0);
+        }
+    }
+
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
     }
 
     public static class MyViewHolder extends FlexibleViewHolder {
@@ -85,12 +138,17 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
         public TextView app_name_tv;
         public TextView app_detail_tv;
 
+        public TextView app_off;
+        public TextView app_title_only;
+
         public MyViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
             app_icon_iv = (ImageView) view.findViewById(R.id.app_icon_iv);
             app_name_tv = (TextView) view.findViewById(R.id.app_name_tv);
             app_detail_tv = (TextView) view.findViewById(R.id.app_detail_tv);
+
+            app_off = (TextView) view.findViewById(R.id.app_off);
+            app_title_only = (TextView) view.findViewById(R.id.app_title_only);
         }
     }
-
 }

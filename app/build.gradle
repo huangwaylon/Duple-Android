@@ -48,6 +48,8 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.0.2'
     compile 'com.google.firebase:firebase-auth:11.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.layer-net:step-indicator:1.1.0'
+
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
