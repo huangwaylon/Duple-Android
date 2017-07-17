@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "133229461858",
+    "firebase_url": "https://notify-desktop-d1548.firebaseio.com",
+    "project_id": "notify-desktop-d1548",
+    "storage_bucket": "notify-desktop-d1548.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133229461858:android:5ee050f37c61e9ff",
+        "android_client_info": {
+          "package_name": "com.waylonhuang.desktopnotification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133229461858-0r16p6agkilvo3jehs9o622ble2n70f2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.waylonhuang.desktopnotification",
+            "certificate_hash": "012a062d068149f7c0e2b335518dbce2e1fb43d3"
+          }
+        },
+        {
+          "client_id": "133229461858-mjhv6q7m7o68ca295d240l7hbs4uln8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZx0DHizSx6j5rEgF82Kc4vhgIbG79wQ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133229461858-mjhv6q7m7o68ca295d240l7hbs4uln8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

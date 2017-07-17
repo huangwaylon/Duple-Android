@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Notify">
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@android:drawable/ic_search_category_default"
+                android:title="Home" />
+
+            <item
+                android:id="@+id/nav_apps"
+                android:icon="@android:drawable/ic_search_category_default"
+                android:title="Apps" />
+
+            <item
+                android:id="@+id/nav_history"
+                android:icon="@android:drawable/ic_search_category_default"
+                android:title="History" />
+
+            <item
+                android:id="@+id/nav_setup"
+                android:icon="@android:drawable/ic_search_category_default"
+                android:title="Setup" />
+        </group>
+    </item>
+
+    <item android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Settings" />
+        </menu>
+    </item>
+
+</menu>
