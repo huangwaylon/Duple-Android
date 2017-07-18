@@ -29,7 +29,7 @@ import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener4 extends NotificationListenerService {
+public class NotificationListener5 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();

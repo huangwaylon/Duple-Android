@@ -19,11 +19,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.waylonhuang.notifydesktop.applist.AppListFragment;
 import com.waylonhuang.notifydesktop.history.HistoryFragment;
 import com.waylonhuang.notifydesktop.setupwizard.WizardFragment;
@@ -35,6 +42,9 @@ import java.util.Locale;
 import static com.waylonhuang.notifydesktop.setupwizard.DoneSetupFragment.FINISH_INTENT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String REAL_AD_ID = "ca-app-pub-1189993122998448~5476081412";
+    public static final String TEST_AD_ID = "ca-app-pub-3940256099942544~3347511713";
+
     public static final String DELETE_INTENT = "DELETE_INTENT";
     public static final String PREFS_FILE = "PREFS_FILE";
     private static final String NAV_DRAWER_SELECT_KEY = "NAV_DRAWER_SELECT_KEY";
@@ -96,6 +106,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switchToFragment(navDrawerSelectedIndex);
             }
         };
+
+        MobileAds.initialize(this, REAL_AD_ID);
+        final AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.wtf("Ads", "onAdLoaded");
+                FrameLayout frameLayout = (FrameLayout)findViewById(R.id.flContent);
+                setMargins(frameLayout, 0, 0, 0, mAdView.getHeight());
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Log.wtf("Ads", "onAdFailedToLoad");
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                Log.wtf("Ads", "onAdOpened");
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+                Log.wtf("Ads", "onAdLeftApplication");
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+                Log.wtf("Ads", "onAdClosed");
+            }
+        });
+    }
+
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
     }
 
     @Override

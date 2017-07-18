@@ -16,15 +16,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
 import java.util.Date;
 
 import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
+import static com.waylonhuang.notifydesktop.MainActivity.REAL_AD_ID;
+import static com.waylonhuang.notifydesktop.MainActivity.TEST_AD_ID;
 
 /**
  * Created by Waylon on 4/25/2017.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements RewardedVideoAdListener{
+    private RewardedVideoAd mAd;
 
     public SettingsFragment() {
     }
@@ -50,11 +59,30 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
 
+    private void loadRewardedVideoAd() {
+        mAd.loadAd(REAL_AD_ID, new AdRequest.Builder().build());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Settings");
 
+        mAd = MobileAds.getRewardedVideoAdInstance(getActivity());
+        mAd.setRewardedVideoAdListener(this);
+
+        loadRewardedVideoAd();
+
         final String appPackageName = getActivity().getPackageName();
+
+        Preference videoPref = (Preference) findPreference("video");
+        videoPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                if (mAd.isLoaded()) {
+                    mAd.show();
+                }
+                return true;
+            }
+        });
 
         Preference playStorePref = (Preference) findPreference("rate");
         playStorePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -77,9 +105,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_EMAIL, "wwaylonhuang@gmail.com");
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Notification App Feedback");
-                intent.putExtra(Intent.EXTRA_TEXT, "Feedback regarding app:\n");
+                intent.putExtra(Intent.EXTRA_EMAIL, "dupleapp@gmail.com");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Duple App Feedback");
+                intent.putExtra(Intent.EXTRA_TEXT, "Feedback for Duple app:\n");
 
                 startActivity(Intent.createChooser(intent, "Send Email"));
                 return true;
@@ -167,5 +195,63 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // Required to reward the user.
+    @Override
+    public void onRewarded(RewardItem reward) {
+        Toast.makeText(getActivity(), "onRewarded! currency: " + reward.getType() + "  amount: " + reward.getAmount(), Toast.LENGTH_SHORT).show();
+        // Reward the user.
+    }
+
+    // The following listener methods are optional.
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+//        Toast.makeText(getActivity(), "onRewardedVideoAdLeftApplication", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+//        Toast.makeText(getActivity(), "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode) {
+//        Toast.makeText(getActivity(), "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+        System.out.println("Failed to load video ad.");
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+//        Toast.makeText(getActivity(), "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+        System.out.println("Loaded video ad!");
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+//        Toast.makeText(getActivity(), "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+//        Toast.makeText(getActivity(), "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        mAd.resume(getActivity());
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mAd.pause(getActivity());
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mAd.destroy(getActivity());
+        super.onDestroy();
     }
 }
