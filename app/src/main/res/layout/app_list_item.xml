@@ -28,18 +28,22 @@
                 android:id="@+id/app_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="60dp"
-                android:text="Gmail asdf asd fasdf asd asdf asd asdf asdf asdf das sda"
+                android:paddingEnd="65dp"
+                android:text="Gmail Email and Contacts"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/app_title_only"
-                android:layout_width="20dp"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="35dp"
+                android:background="@drawable/rounded_corner"
+                android:gravity="center"
+                android:padding="3dp"
                 android:text="NC"
+                android:textColor="#fff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -48,7 +52,11 @@
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:background="@drawable/rounded_corner_dark"
+                android:gravity="center"
+                android:padding="3dp"
                 android:text="OFF"
+                android:textColor="#fff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </RelativeLayout>

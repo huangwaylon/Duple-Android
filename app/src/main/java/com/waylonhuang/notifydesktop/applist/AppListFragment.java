@@ -1,4 +1,4 @@
-package com.waylonhuang.notifydesktop;
+package com.waylonhuang.notifydesktop.applist;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -14,14 +14,14 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.waylonhuang.notifydesktop.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +31,7 @@ import eu.davidea.fastscroller.FastScroller;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.common.FlexibleItemDecoration;
 
-import static com.waylonhuang.notifydesktop.SetupFragment.PREFS_FILE;
+import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
 
 public class AppListFragment extends Fragment {
     private Set<String> offList;
@@ -124,9 +124,7 @@ public class AppListFragment extends Fragment {
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
         for (ApplicationInfo info : packages) {
-            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                // System application.
-            } else {
+            if (pm.getLaunchIntentForPackage(info.packageName) != null) {
                 // Installed by user.
                 Drawable icon = pm.getApplicationIcon(info);
                 String name = (String) pm.getApplicationLabel(info);
@@ -137,6 +135,9 @@ public class AppListFragment extends Fragment {
 
                 AppItem item = new AppItem(name, packageName, icon, isOff, isTitleOnly);
                 items.add(item);
+            } else {
+                // System App.
+                // if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
             }
         }
         return items;

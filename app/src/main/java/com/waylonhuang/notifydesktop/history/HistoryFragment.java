@@ -1,5 +1,9 @@
-package com.waylonhuang.notifydesktop;
+package com.waylonhuang.notifydesktop.history;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,6 +16,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.waylonhuang.notifydesktop.NotificationItem;
+import com.waylonhuang.notifydesktop.NotificationSQLiteHelper;
+import com.waylonhuang.notifydesktop.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +32,12 @@ import eu.davidea.fastscroller.FastScroller;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.common.FlexibleItemDecoration;
 
+import static com.waylonhuang.notifydesktop.MainActivity.DELETE_INTENT;
+
 public class HistoryFragment extends Fragment {
+    private BroadcastReceiver deleteReceiver;
+    private IntentFilter deleteFilter;
+
     public HistoryFragment() {
     }
 
@@ -47,7 +61,7 @@ public class HistoryFragment extends Fragment {
         final FlexibleAdapter<NotificationItem> adapter = new FlexibleAdapter<>(new ArrayList<NotificationItem>());
         final FastScroller fastScroller = (FastScroller) view.findViewById(R.id.his_list_fs);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.his_list_rv);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.his_list_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -75,7 +89,43 @@ public class HistoryFragment extends Fragment {
 
         adapter.updateDataSet(organizeItems(helper));
 
+        final TextView emptyView = (TextView) view.findViewById(R.id.empty_view);
+
+        // Setup filter and receiver.
+        deleteFilter = new IntentFilter(DELETE_INTENT);
+        deleteReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                adapter.updateDataSet(organizeItems(helper));
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        };
+
+
+        if (adapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (deleteReceiver != null) {
+            getActivity().unregisterReceiver(deleteReceiver);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(deleteReceiver, deleteFilter);
     }
 
     @Override

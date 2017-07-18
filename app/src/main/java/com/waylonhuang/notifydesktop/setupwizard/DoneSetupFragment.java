@@ -28,6 +28,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * A simple {@link Fragment} subclass.
  */
 public class DoneSetupFragment extends Fragment {
+    public static final String FINISH_INTENT = "FINISH_INTENT";
 
     public DoneSetupFragment() {
         // Required empty public constructor
@@ -45,6 +46,15 @@ public class DoneSetupFragment extends Fragment {
             public void onClick(View v) {
                 createTestNotification();
                 Snackbar.make(view, "Created test notification", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        Button finishButton = (Button) view.findViewById(R.id.finish_button);
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FINISH_INTENT);
+                getActivity().sendBroadcast(intent);
             }
         });
 

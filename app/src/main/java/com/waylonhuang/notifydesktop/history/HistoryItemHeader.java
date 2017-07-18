@@ -1,7 +1,9 @@
-package com.waylonhuang.notifydesktop;
+package com.waylonhuang.notifydesktop.history;
 
 import android.view.View;
 import android.widget.TextView;
+
+import com.waylonhuang.notifydesktop.R;
 
 import java.util.List;
 

@@ -6,10 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.waylonhuang.notifydesktop.history.HistoryItemHeader;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

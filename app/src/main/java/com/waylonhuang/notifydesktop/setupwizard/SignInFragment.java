@@ -33,7 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.waylonhuang.notifydesktop.R;
 
-import static com.waylonhuang.notifydesktop.SetupFragment.PREFS_FILE;
+import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
 
 public class SignInFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 9001;

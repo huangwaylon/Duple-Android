@@ -23,13 +23,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.waylonhuang.notifydesktop.SetupFragment.PREFS_FILE;
+import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
 
 /**
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener2 extends NotificationListenerService {
+public class NotificationListener4 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();

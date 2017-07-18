@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.waylonhuang.notifydesktop.AppListFragment">
+    tools:context="com.waylonhuang.notifydesktop.applist.AppListFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/history_sfl"
@@ -22,6 +22,14 @@
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No items in your history!" />
 
     <eu.davidea.fastscroller.FastScroller
         android:id="@+id/his_list_fs"

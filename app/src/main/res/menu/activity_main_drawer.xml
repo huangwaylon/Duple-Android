@@ -4,11 +4,6 @@
     <item android:title="Notify">
         <group android:checkableBehavior="single">
             <item
-                android:id="@+id/nav_home"
-                android:icon="@mipmap/ic_home_black_24dp"
-                android:title="Home" />
-
-            <item
                 android:id="@+id/nav_apps"
                 android:icon="@mipmap/ic_apps_black_24dp"
                 android:title="Apps" />
@@ -29,7 +24,7 @@
         <menu>
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@android:drawable/ic_menu_preferences"
+                android:icon="@drawable/ic_settings_black_24dp"
                 android:title="Settings" />
         </menu>
     </item>

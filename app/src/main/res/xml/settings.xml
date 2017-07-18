@@ -31,8 +31,7 @@
         <Preference
             android:key="contact"
             android:summary="wwaylonhuang@gmail.com"
-            android:title="Contact">
-        </Preference>
+            android:title="Contact" />
 
         <Preference
             android:key="rate"
@@ -46,6 +45,11 @@
             android:key="copyright"
             android:summary="Copyright \u00A9 2017 Waylon Huang"
             android:title="Copyright" />
+
+        <Preference
+            android:key="privacy"
+            android:summary="Details on privacy and information regarding this app"
+            android:title="Privacy policy" />
 
         <Preference
             android:key="licenses"

@@ -1,12 +1,13 @@
-package com.waylonhuang.notifydesktop;
+package com.waylonhuang.notifydesktop.applist;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.waylonhuang.notifydesktop.R;
 
 import java.util.List;
 
@@ -103,13 +104,13 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
             holder.app_title_only.setVisibility(View.VISIBLE);
 
             holder.app_name_tv.setPadding(0, 0, 60, 0);
-            setMargins(holder.app_title_only, 0, 0, 60, 0);
+            setMargins(holder.app_title_only, 0, 0, 65, 0);
         } else if (isOff) {
             holder.app_off.setVisibility(View.VISIBLE);
             holder.app_title_only.setVisibility(View.GONE);
 
             holder.app_name_tv.setPadding(0, 0, 40, 0);
-            setMargins(holder.app_title_only, 0, 0, 60, 0);
+            setMargins(holder.app_title_only, 0, 0, 65, 0);
         } else if (isTitleOnly) {
             holder.app_off.setVisibility(View.GONE);
             holder.app_title_only.setVisibility(View.VISIBLE);
@@ -121,7 +122,7 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
             holder.app_title_only.setVisibility(View.GONE);
 
             holder.app_name_tv.setPadding(0, 0, 0, 0);
-            setMargins(holder.app_title_only, 0, 0, 60, 0);
+            setMargins(holder.app_title_only, 0, 0, 65, 0);
         }
     }
 

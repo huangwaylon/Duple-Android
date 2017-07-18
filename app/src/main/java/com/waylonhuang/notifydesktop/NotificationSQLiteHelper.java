@@ -64,7 +64,7 @@ public class NotificationSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade");
-        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE + ";");
         this.onCreate(db);
     }
 
@@ -129,5 +129,11 @@ public class NotificationSQLiteHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return itemList;
+    }
+
+    public void deleteAllItems() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + NOTIFICATION_TABLE + ";");
+        db.close();
     }
 }
