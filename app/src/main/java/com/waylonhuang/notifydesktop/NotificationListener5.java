@@ -93,7 +93,7 @@ public class NotificationListener5 extends NotificationListenerService {
 
         long _id = System.currentTimeMillis();
 
-        postTime += Math.floor(Math.random()*86400000*10);
+        // postTime += Math.floor(Math.random()*86400000*10);
         NotificationItem item = new NotificationItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
 
         // Save the notification.

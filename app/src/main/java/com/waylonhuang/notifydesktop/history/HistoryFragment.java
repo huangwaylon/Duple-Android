@@ -131,7 +131,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Snackbar.make(view, "Pull down to refresh", Snackbar.LENGTH_LONG).setAction("Okay", null).show();
+        Snackbar.make(view, "Pull down to refresh", Snackbar.LENGTH_SHORT).show();
     }
 
     private List<NotificationItem> organizeItems(NotificationSQLiteHelper helper) {

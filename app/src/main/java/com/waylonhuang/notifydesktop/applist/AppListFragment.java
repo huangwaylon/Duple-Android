@@ -186,7 +186,7 @@ public class AppListFragment extends Fragment {
 
                         View view = getView();
                         if (view != null) {
-                            Snackbar.make(view, "Updated settings for " + item.getAppName(), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, "Updated settings for " + item.getAppName(), Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 })

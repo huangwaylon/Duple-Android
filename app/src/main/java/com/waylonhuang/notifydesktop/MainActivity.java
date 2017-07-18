@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 createTestNotification();
-                Snackbar.make(view, "Test notification created", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Test notification created", Snackbar.LENGTH_SHORT)
                         .setAction("Okay", null).show();
             }
         });
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(browserIntent);
         } else if (item.getItemId() == R.id.test_menu) {
             createTestNotification();
-            Snackbar.make(view, "Created test notification", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Created test notification", Snackbar.LENGTH_SHORT).show();
         } else if (item.getItemId() == R.id.clear_menu) {
             final NotificationSQLiteHelper helper = NotificationSQLiteHelper.getInstance(this);
             helper.deleteAllItems();
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(DELETE_INTENT);
             sendBroadcast(intent);
 
-            Snackbar.make(view, "History cleared", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "History cleared", Snackbar.LENGTH_SHORT).show();
         } else if (item.getItemId() == R.id.sign_out_menu) {
             final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navDrawerSelectedIndex = R.id.nav_setup;
@@ -269,10 +269,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setContentTitle("Notify Desktop");
+        notificationBuilder.setContentTitle("Duple");
         notificationBuilder.setContentText("Notification sent at: " + timeStr);
-        notificationBuilder.setTicker("Test Notification Ticker Text");
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setTicker("Test notification ticker text");
+        notificationBuilder.setSmallIcon(R.drawable.sb_small_icon);
         notificationBuilder.setAutoCancel(true);
         nManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
     }

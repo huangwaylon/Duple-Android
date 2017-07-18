@@ -45,7 +45,7 @@ public class DoneSetupFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 createTestNotification();
-                Snackbar.make(view, "Created test notification", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Created test notification", Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -68,10 +68,10 @@ public class DoneSetupFragment extends Fragment {
 
         NotificationManager nManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity());
-        notificationBuilder.setContentTitle("Notify Desktop");
+        notificationBuilder.setContentTitle("Duple");
         notificationBuilder.setContentText("Notification sent at: " + timeStr);
-        notificationBuilder.setTicker("Test Notification Ticker Text");
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setTicker("Test notification ticker text");
+        notificationBuilder.setSmallIcon(R.drawable.sb_small_icon);
         notificationBuilder.setAutoCancel(true);
         nManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
     }

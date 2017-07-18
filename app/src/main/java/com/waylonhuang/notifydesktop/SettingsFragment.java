@@ -32,7 +32,7 @@ import static com.waylonhuang.notifydesktop.MainActivity.TEST_AD_ID;
  * Created by Waylon on 4/25/2017.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat implements RewardedVideoAdListener{
+public class SettingsFragment extends PreferenceFragmentCompat implements RewardedVideoAdListener {
     private RewardedVideoAd mAd;
 
     public SettingsFragment() {
@@ -105,7 +105,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_EMAIL, "dupleapp@gmail.com");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"dupleapp@gmail.com"});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Duple App Feedback");
                 intent.putExtra(Intent.EXTRA_TEXT, "Feedback for Duple app:\n");
 
@@ -162,7 +162,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
 
                 View view = getView();
                 if (view != null) {
-                    Snackbar.make(view, "Preferences reset", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "Preferences reset", Snackbar.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Preferences reset", Toast.LENGTH_SHORT).show();
                 }

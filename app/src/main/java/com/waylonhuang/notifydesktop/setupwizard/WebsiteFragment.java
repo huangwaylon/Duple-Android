@@ -39,7 +39,7 @@ public class WebsiteFragment extends Fragment {
                 ClipData clip = ClipData.newPlainText("website", "https://notify-desktop-d1548.firebaseapp.com");
                 clipboard.setPrimaryClip(clip);
 
-                Snackbar.make(view, "Copied link to clipboard!", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Copied link to clipboard!", Snackbar.LENGTH_SHORT).show();
             }
         });
 
