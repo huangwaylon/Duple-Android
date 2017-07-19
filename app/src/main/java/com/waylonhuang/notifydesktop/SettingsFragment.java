@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
@@ -34,6 +35,12 @@ import static com.waylonhuang.notifydesktop.MainActivity.TEST_AD_ID;
  */
 
 public class SettingsFragment extends PreferenceFragmentCompat implements RewardedVideoAdListener {
+    public static final int RED_COLOR = 0;
+    public static final int BLUE_COLOR = 1;
+    public static final int GREEN_COLOR = 2;
+    public static final int TEAL_COLOR = 3;
+    public static final int AMBER_COLOR = 4;
+
     private RewardedVideoAd mAd;
 
     public SettingsFragment() {
@@ -74,6 +81,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
 
         final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_FILE, 0);
         final String appPackageName = getActivity().getPackageName();
+
+        int themeColor = settings.getInt("theme_color", RED_COLOR);
+        ListPreference colorPref = (ListPreference)findPreference("theme_color");
+        colorPref.setDefaultValue(themeColor);
+        colorPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (newValue instanceof Integer) {
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("theme_color", (Integer) newValue);
+                    editor.apply();
+                }
+                return true;
+            }
+        });
 
         CheckBoxPreference historyPref = (CheckBoxPreference) findPreference("history");
         historyPref.setChecked(settings.getBoolean("history", true));
@@ -171,6 +193,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
                 // editor.putString("email", email);
                 // editor.putString("username", username);
                 // editor.putString("uid", user.getUid());
+                editor.putBoolean("history", true);
                 editor.putString("offApps", "");
                 editor.putString("titleOnlyApps", "");
                 editor.apply();
@@ -198,9 +221,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         String message = "This application does not collect and/or permanently store any user data and information on private or public servers. " +
-                "Notification data is retained for as long as it takes to transmit the information from your device to " +
-                "the cloud and to your other devices through Google Firebase. There is a local copy of notifications " +
-                "that are stored for user reference and convenience which can be permanently cleared at any time. This application does not collect and/or permanently store any user data and information on private or public servers. " +
                 "Notification data is retained for as long as it takes to transmit the information from your device to " +
                 "the cloud and to your other devices through Google Firebase. There is a local copy of notifications " +
                 "that are stored for user reference and convenience which can be permanently cleared at any time.";

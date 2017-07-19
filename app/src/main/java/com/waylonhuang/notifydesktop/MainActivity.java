@@ -39,6 +39,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.waylonhuang.notifydesktop.SettingsFragment.AMBER_COLOR;
+import static com.waylonhuang.notifydesktop.SettingsFragment.BLUE_COLOR;
+import static com.waylonhuang.notifydesktop.SettingsFragment.GREEN_COLOR;
+import static com.waylonhuang.notifydesktop.SettingsFragment.RED_COLOR;
+import static com.waylonhuang.notifydesktop.SettingsFragment.TEAL_COLOR;
 import static com.waylonhuang.notifydesktop.setupwizard.DoneSetupFragment.FINISH_INTENT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,7 +62,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeRed);
+        final SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+        int themeColor = settings.getInt("theme_color", RED_COLOR);
+        if (themeColor == BLUE_COLOR) {
+            setTheme(R.style.AppThemeBlue);
+        } else if (themeColor == GREEN_COLOR) {
+            setTheme(R.style.AppThemeGreen);
+        } else if (themeColor == TEAL_COLOR) {
+            setTheme(R.style.AppThemeTeal);
+        } else if (themeColor == AMBER_COLOR) {
+            setTheme(R.style.AppThemeAmber);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -86,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Default fragment to select.
         navDrawerSelectedIndex = R.id.nav_apps;
-        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+
         boolean signedIn = settings.getBoolean("signedIn", false);
         if (!signedIn) {
             navDrawerSelectedIndex = R.id.nav_setup;
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
                 Log.wtf("Ads", "onAdLoaded");
-                FrameLayout frameLayout = (FrameLayout)findViewById(R.id.flContent);
+                FrameLayout frameLayout = (FrameLayout) findViewById(R.id.flContent);
                 setMargins(frameLayout, 0, 0, 0, mAdView.getHeight());
             }
 
@@ -151,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    public static void setMargins (View v, int l, int t, int r, int b) {
+    public static void setMargins(View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);

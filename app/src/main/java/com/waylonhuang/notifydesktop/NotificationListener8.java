@@ -29,7 +29,7 @@ import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener5 extends NotificationListenerService {
+public class NotificationListener8 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -55,14 +55,14 @@ public class NotificationListener5 extends NotificationListenerService {
         String[] titleApps = titleOnlyApps.split(",", -1);
 
         if (!signedIn) {
-            // System.out.println("Not signed in!");
+            System.out.println("Not signed in!");
             return;
         }
 
         // UID from the signed in user.
         String uid = settings.getString("uid", null);
         if (uid == null) {
-            // System.out.println("uid is null!");
+            System.out.println("uid is null!");
             return;
         }
 
@@ -70,6 +70,7 @@ public class NotificationListener5 extends NotificationListenerService {
 
         String packageName = sbn.getPackageName();
         if (Arrays.asList(offArr).contains(packageName)) {
+            System.out.println("Notifications turned off for " + packageName);
             return;
         }
 
@@ -93,6 +94,8 @@ public class NotificationListener5 extends NotificationListenerService {
 
         // Send notification to server.
         post(uid, appName, title, text, postTime);
+
+        System.out.println("Posted!");
 
         // Check if history is enabled.
         if (history) {

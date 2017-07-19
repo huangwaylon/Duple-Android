@@ -9,9 +9,9 @@
         android:paddingBottom="10dp">
 
         <TextView
+            style="?history_header_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:padding="10dp"
             android:text="Enable Notification Service"
             android:textColor="#fff"

@@ -8,4 +8,24 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+
+    <color name="blue_primary">#2196F3</color>
+    <color name="blue_primary_dark">#1976D2</color>
+    <color name="blue_primary_light">#BBDEFB</color>
+    <color name="blue_accent">#607D8B</color>
+
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_primary_dark">#388E3C</color>
+    <color name="green_primary_light">#C8E6C9</color>
+    <color name="green_accent">#607D8B</color>
+
+    <color name="amber_primary">#FFC107</color>
+    <color name="amber_primary_dark">#FFA000</color>
+    <color name="amber_primary_light">#FFECB3</color>
+    <color name="amber_accent">#607D8B</color>
+
+    <color name="teal_primary">#009688</color>
+    <color name="teal_primary_dark">#00796B</color>
+    <color name="teal_primary_light">#B2DFDB</color>
+    <color name="teal_accent">#607D8B</color>
 </resources>

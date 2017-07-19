@@ -1,27 +1,66 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"></style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <attr name="history_header_style" format="reference" />
+
+    <style name="history_header_style_red">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="history_header_style_blue">
+        <item name="android:background">@color/blue_primary_dark</item>
+    </style>
+
+    <style name="history_header_style_green">
+        <item name="android:background">@color/green_primary_dark</item>
+    </style>
+
+    <style name="history_header_style_teal">
+        <item name="android:background">@color/teal_primary_dark</item>
+    </style>
+
+    <style name="history_header_style_amber">
+        <item name="android:background">@color/amber_primary_dark</item>
+    </style>
+
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="history_header_style">@style/history_header_style_red</item>
     </style>
 
-    <style name="AppThemeRed" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">#f0f</item>
-        <item name="colorPrimaryDark">#6b116b</item>
-        <item name="colorAccent">#a83da8</item>
+    <style name="AppThemeBlue" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorPrimaryDark">@color/blue_primary_dark</item>
+        <item name="colorAccent">@color/blue_accent</item>
+        <item name="history_header_style">@style/history_header_style_blue</item>
     </style>
 
+    <style name="AppThemeGreen" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorPrimaryDark">@color/green_primary_dark</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="history_header_style">@style/history_header_style_green</item>
+    </style>
+
+    <style name="AppThemeTeal" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/teal_primary</item>
+        <item name="colorPrimaryDark">@color/teal_primary_dark</item>
+        <item name="colorAccent">@color/teal_accent</item>
+        <item name="history_header_style">@style/history_header_style_teal</item>
+    </style>
+
+    <style name="AppThemeAmber" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/amber_primary</item>
+        <item name="colorPrimaryDark">@color/amber_primary_dark</item>
+        <item name="colorAccent">@color/amber_accent</item>
+        <item name="history_header_style">@style/history_header_style_amber</item>
+    </style>
 </resources>

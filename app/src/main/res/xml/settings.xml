@@ -2,6 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="General">
+        <ListPreference
+            android:title="Theme Color"
+            android:summary="Pick a theme color"
+            android:key="theme_color"
+            android:defaultValue="0"
+            android:entries="@array/colorArray"
+            android:entryValues="@array/colorValues" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="history"
