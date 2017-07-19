@@ -63,10 +63,16 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
                 .requestServerAuthCode(getString(R.string.default_web_client_id))
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+            try {
+                mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                        .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                        .build();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         Button signOutButton = (Button) view.findViewById(R.id.signout_button);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +191,11 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
     private void signOut() {
+        if (mGoogleApiClient == null) {
+            Toast.makeText(getActivity(), "Couldn't sign out.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -222,7 +233,9 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 }

@@ -2,17 +2,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="General">
-
-        <Preference
-            android:key="video"
-            android:summary="View a video ad and see fewer banner ads for a week!"
-            android:title="Video Ad" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="history"
+            android:summary="Enable local record of notifications on this device"
+            android:title="Notification History" />
 
         <Preference
             android:key="reset"
             android:summary="Clear all settings and preferences"
             android:title="Reset" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="Ads">
+        <Preference
+            android:key="video"
+            android:summary="View a video ad and see fewer banner ads for a week!"
+            android:title="Video Ad" />
+    </PreferenceCategory>
+
 
     <PreferenceCategory android:title="Version">
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
@@ -69,10 +70,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
 
         mAd = MobileAds.getRewardedVideoAdInstance(getActivity());
         mAd.setRewardedVideoAdListener(this);
-
         loadRewardedVideoAd();
 
+        final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_FILE, 0);
         final String appPackageName = getActivity().getPackageName();
+
+        CheckBoxPreference historyPref = (CheckBoxPreference) findPreference("history");
+        historyPref.setChecked(settings.getBoolean("history", true));
+        historyPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (newValue instanceof Boolean) {
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("history", (Boolean) newValue);
+                    editor.apply();
+                }
+                return true;
+            }
+        });
 
         Preference videoPref = (Preference) findPreference("video");
         videoPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

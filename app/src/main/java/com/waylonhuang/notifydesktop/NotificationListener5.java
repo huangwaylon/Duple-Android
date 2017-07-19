@@ -48,6 +48,7 @@ public class NotificationListener5 extends NotificationListenerService {
 
         SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
         boolean signedIn = settings.getBoolean("signedIn", false);
+        boolean history = settings.getBoolean("history", true);
         String offApps = settings.getString("offApps", "");
         String titleOnlyApps = settings.getString("titleOnlyApps", "");
         String[] offArr = offApps.split(",", -1);
@@ -58,6 +59,7 @@ public class NotificationListener5 extends NotificationListenerService {
             return;
         }
 
+        // UID from the signed in user.
         String uid = settings.getString("uid", null);
         if (uid == null) {
             // System.out.println("uid is null!");
@@ -84,20 +86,22 @@ public class NotificationListener5 extends NotificationListenerService {
         String title = extras.getString("android.title");
         String text = extras.getString("android.text");
 
+        // Check if the user does not want to include the content of the notification.
         if (Arrays.asList(titleApps).contains(packageName)) {
             text = "";
         }
 
-        // Send to server.
+        // Send notification to server.
         post(uid, appName, title, text, postTime);
 
-        long _id = System.currentTimeMillis();
+        // Check if history is enabled.
+        if (history) {
+            long _id = System.currentTimeMillis();
+            NotificationItem item = new NotificationItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
 
-        // postTime += Math.floor(Math.random()*86400000*10);
-        NotificationItem item = new NotificationItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
-
-        // Save the notification.
-        saveNotification(item);
+            // Save the notification to history record.
+            saveNotification(item);
+        }
     }
 
     private class AsyncTaskRunner extends AsyncTask<String, String, Void> {

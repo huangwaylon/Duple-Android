@@ -124,7 +124,7 @@ public class AppListFragment extends Fragment {
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
         for (ApplicationInfo info : packages) {
-            if (pm.getLaunchIntentForPackage(info.packageName) != null) {
+            if ((pm.getLaunchIntentForPackage(info.packageName) != null) || (info.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
                 // Installed by user.
                 Drawable icon = pm.getApplicationIcon(info);
                 String name = (String) pm.getApplicationLabel(info);

@@ -18,4 +18,10 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
+    <style name="AppThemeRed" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">#f0f</item>
+        <item name="colorPrimaryDark">#6b116b</item>
+        <item name="colorAccent">#a83da8</item>
+    </style>
+
 </resources>
