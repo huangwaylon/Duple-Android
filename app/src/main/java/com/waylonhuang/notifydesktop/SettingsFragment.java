@@ -83,15 +83,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
         final String appPackageName = getActivity().getPackageName();
 
         int themeColor = settings.getInt("theme_color", RED_COLOR);
-        ListPreference colorPref = (ListPreference)findPreference("theme_color");
+        ListPreference colorPref = (ListPreference) findPreference("theme_color");
         colorPref.setDefaultValue(themeColor);
         colorPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue instanceof Integer) {
+                if (newValue instanceof String) {
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("theme_color", (Integer) newValue);
+                    editor.putInt("theme_color", Integer.parseInt((String) newValue));
                     editor.apply();
+
+                    String message = "Restart app to apply new theme!";
+                    View view = getView();
+                    if (view != null) {
+                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 return true;
             }
@@ -189,13 +197,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
                 SharedPreferences settings = getActivity().getSharedPreferences(PREFS_FILE, 0);
                 SharedPreferences.Editor editor = settings.edit();
 
-                // editor.putBoolean("signedIn", true);
-                // editor.putString("email", email);
-                // editor.putString("username", username);
-                // editor.putString("uid", user.getUid());
                 editor.putBoolean("history", true);
                 editor.putString("offApps", "");
                 editor.putString("titleOnlyApps", "");
+                editor.putInt("theme_color", RED_COLOR);
                 editor.apply();
 
                 View view = getView();

@@ -36,6 +36,13 @@
         <item name="history_header_style">@style/history_header_style_red</item>
     </style>
 
+    <style name="AppThemeRed" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="history_header_style">@style/history_header_style_red</item>
+    </style>
+
     <style name="AppThemeBlue" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/blue_primary</item>
         <item name="colorPrimaryDark">@color/blue_primary_dark</item>

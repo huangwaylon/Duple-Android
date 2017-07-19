@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTheme(R.style.AppThemeTeal);
         } else if (themeColor == AMBER_COLOR) {
             setTheme(R.style.AppThemeAmber);
+        } else {
+            setTheme(R.style.AppThemeRed);
         }
 
         super.onCreate(savedInstanceState);
