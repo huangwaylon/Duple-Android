@@ -3,18 +3,23 @@
 
     <PreferenceCategory android:title="General">
         <ListPreference
-            android:title="Theme Color"
-            android:summary="Pick a theme color"
-            android:key="theme_color"
             android:defaultValue="0"
             android:entries="@array/colorArray"
-            android:entryValues="@array/colorValues" />
+            android:entryValues="@array/colorValues"
+            android:key="theme_color"
+            android:summary="Pick a theme color"
+            android:title="Theme Color" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="history"
             android:summary="Enable local record of notifications on this device"
             android:title="Notification History" />
+
+        <Preference
+            android:key="clear_history"
+            android:summary="Remove all local notification records"
+            android:title="Clear History" />
 
         <Preference
             android:key="reset"

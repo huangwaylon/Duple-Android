@@ -3,19 +3,15 @@ package com.waylonhuang.notifydesktop.setupwizard;
 
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.waylonhuang.notifydesktop.NotificationItem;
 import com.waylonhuang.notifydesktop.R;
 
 import java.text.SimpleDateFormat;

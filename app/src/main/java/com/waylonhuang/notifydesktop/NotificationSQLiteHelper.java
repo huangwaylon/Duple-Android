@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.waylonhuang.notifydesktop.history.HistoryItem;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -68,7 +67,7 @@ public class NotificationSQLiteHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
-    public void addNotificationItem(NotificationItem item) {
+    public void addNotificationItem(HistoryItem item) {
         Log.d(TAG, "addNotificationItem");
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -103,10 +102,10 @@ public class NotificationSQLiteHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<NotificationItem> getAllItems(Context context) {
+    public List<HistoryItem> getAllItems(Context context) {
         Log.d(TAG, "getAllItems");
 
-        List<NotificationItem> itemList = new ArrayList<>();
+        List<HistoryItem> itemList = new ArrayList<>();
 
         String query = "SELECT * FROM " + NOTIFICATION_TABLE + " ORDER BY time DESC;";
 
@@ -122,7 +121,7 @@ public class NotificationSQLiteHelper extends SQLiteOpenHelper {
                 String text = cursor.getString(4);
                 long time = cursor.getLong(5);
 
-                NotificationItem item = new NotificationItem(context, _id, appName, packageName, title, text, time);
+                HistoryItem item = new HistoryItem(context, _id, appName, packageName, title, text, time);
                 itemList.add(item);
             } while (cursor.moveToNext());
         }

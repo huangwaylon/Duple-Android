@@ -1,4 +1,4 @@
-package com.waylonhuang.notifydesktop;
+package com.waylonhuang.notifydesktop.history;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.waylonhuang.notifydesktop.history.HistoryItemHeader;
+import com.waylonhuang.notifydesktop.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +26,7 @@ import eu.davidea.viewholders.FlexibleViewHolder;
  * Created by Waylon on 7/15/2017.
  */
 
-public class NotificationItem extends AbstractFlexibleItem<NotificationItem.MyViewHolder> implements ISectionable<NotificationItem.MyViewHolder, HistoryItemHeader>, Parcelable {
+public class HistoryItem extends AbstractFlexibleItem<HistoryItem.MyViewHolder> implements ISectionable<HistoryItem.MyViewHolder, HistoryItemHeader>, Parcelable {
     private long _id, time;
     private String appName, packageName, title, text;
     private Drawable icon;
@@ -36,7 +36,7 @@ public class NotificationItem extends AbstractFlexibleItem<NotificationItem.MyVi
 
     private HistoryItemHeader header;
 
-    public NotificationItem(Context context, long _id, String appName, String packageName, String title, String text, long time) {
+    public HistoryItem(Context context, long _id, String appName, String packageName, String title, String text, long time) {
         this._id = _id;
         this.appName = appName;
         this.packageName = packageName;
@@ -91,8 +91,8 @@ public class NotificationItem extends AbstractFlexibleItem<NotificationItem.MyVi
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof NotificationItem) {
-            NotificationItem inItem = (NotificationItem) other;
+        if (other instanceof HistoryItem) {
+            HistoryItem inItem = (HistoryItem) other;
             return this._id == inItem._id;
         }
         return false;
@@ -136,7 +136,7 @@ public class NotificationItem extends AbstractFlexibleItem<NotificationItem.MyVi
         }
     }
 
-    public NotificationItem(Parcel parcel) {
+    public HistoryItem(Parcel parcel) {
         Bundle bundle = parcel.readBundle();
         this._id = bundle.getLong("_id");
         this.appName = bundle.getString("appName");
@@ -165,12 +165,12 @@ public class NotificationItem extends AbstractFlexibleItem<NotificationItem.MyVi
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public NotificationItem createFromParcel(Parcel in) {
-            return new NotificationItem(in);
+        public HistoryItem createFromParcel(Parcel in) {
+            return new HistoryItem(in);
         }
 
-        public NotificationItem[] newArray(int size) {
-            return new NotificationItem[size];
+        public HistoryItem[] newArray(int size) {
+            return new HistoryItem[size];
         }
     };
 

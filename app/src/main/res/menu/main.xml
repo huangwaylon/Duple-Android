@@ -6,13 +6,13 @@
         android:id="@+id/test_menu"
         android:title="Test Notification"
         android:icon="@drawable/ic_mms_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/launch_menu"
-        android:title="Launch webapp"
+        android:title="Launch Webapp"
         android:icon="@drawable/ic_launch_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/clear_menu"

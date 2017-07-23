@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".NotificationListener9"
+            android:name=".NotificationListener12"
             android:label="@string/service_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -30,13 +30,8 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".PowerConnectionReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-            </intent-filter>
-        </receiver>
-
+        <service android:name=".BatteryService">
+        </service>
     </application>
 
 </manifest>

@@ -1,7 +1,10 @@
 package com.waylonhuang.notifydesktop.setupwizard;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,14 +39,24 @@ import com.waylonhuang.notifydesktop.R;
 import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
 
 public class SignInFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+    public static final String LIFE_CYCLE_INTENT = "LIFE_CYCLE_INTENT";
     private static final int RC_SIGN_IN = 9001;
     private String email, username;
     private boolean signedIn;
 
     private GoogleApiClient mGoogleApiClient;
 
+    BroadcastReceiver receiver;
+    IntentFilter filter;
+
     public SignInFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
     }
 
     @Override
@@ -57,23 +70,6 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
         email = settings.getString("email", "");
         username = settings.getString("username", "");
 
-        final GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestServerAuthCode(getString(R.string.default_web_client_id))
-                .build();
-
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
-            try {
-                mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                        .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                        .build();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         Button signOutButton = (Button) view.findViewById(R.id.signout_button);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,10 +82,23 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mGoogleApiClient == null) {
+                    Toast.makeText(getActivity(), "Couldn't sign in.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
+
+        filter = new IntentFilter(LIFE_CYCLE_INTENT);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                releaseClient();
+            }
+        };
 
         return view;
     }
@@ -109,8 +118,8 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     private void updateUI(boolean signedIn) {
         View view = getView();
 
-        CardView signInCV = (CardView)view.findViewById(R.id.sign_in_cv);
-        CardView signedInCV = (CardView)view.findViewById(R.id.signed_in_cv);
+        CardView signInCV = (CardView) view.findViewById(R.id.sign_in_cv);
+        CardView signedInCV = (CardView) view.findViewById(R.id.signed_in_cv);
 
         TextView emailTV = (TextView) view.findViewById(R.id.signed_in_tv);
         String emailStr = "Signed in: " + email + "\n" + "Welcome " + username + "!";
@@ -231,11 +240,42 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onResume() {
+        super.onResume();
+        Log.wtf("SignIn", "onResume");
+        getActivity().registerReceiver(receiver, filter);
+        final GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestServerAuthCode(getString(R.string.default_web_client_id))
+                .build();
+
+        try {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .enableAutoManage(getActivity(), SignInFragment.this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.wtf("SignIn", "onPause");
+        if (receiver != null) {
+            getActivity().unregisterReceiver(receiver);
+        }
+        releaseClient();
+    }
+
+    private void releaseClient() {
         if (mGoogleApiClient != null) {
+            Log.wtf("TAG", "on pause not null, disconnecting");
             mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
+            mGoogleApiClient = null;
         }
     }
 }

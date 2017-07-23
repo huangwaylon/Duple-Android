@@ -2,13 +2,14 @@ package com.waylonhuang.notifydesktop;
 
 import android.app.Notification;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+
+import com.waylonhuang.notifydesktop.history.HistoryItem;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,7 +30,7 @@ import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener9 extends NotificationListenerService {
+public class NotificationListener12 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -93,14 +94,14 @@ public class NotificationListener9 extends NotificationListenerService {
         }
 
         // Send notification to server.
-        post(uid, appName, title, text, postTime);
+        post(uid, appName, title, text, postTime, packageName);
 
         System.out.println("Posted!");
 
         // Check if history is enabled.
         if (history) {
             long _id = System.currentTimeMillis();
-            NotificationItem item = new NotificationItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
+            HistoryItem item = new HistoryItem(getApplicationContext(), _id, appName, packageName, title, text, postTime);
 
             // Save the notification to history record.
             saveNotification(item);
@@ -134,13 +135,14 @@ public class NotificationListener9 extends NotificationListenerService {
         }
     }
 
-    public void post(String uid, String appName, String title, String text, long time) {
+    public void post(String uid, String appName, String title, String text, long time, String packageName) {
         Map<String, String> params = new HashMap<>();
         params.put("uid", uid);
         params.put("appName", appName);
         params.put("title", title);
         params.put("text", text);
         params.put("time", Long.toString(time));
+        params.put("pkg", packageName);
 
         String body = null;
         try {
@@ -156,15 +158,22 @@ public class NotificationListener9 extends NotificationListenerService {
     private String getDataString(Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
+        for (String key : params.keySet()) {
+            if (key == null) {
+                continue;
+            }
+            String value = params.get(key);
+            if (value == null) {
+                continue;
+            }
             if (first) {
                 first = false;
             } else {
                 result.append("&");
             }
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append(URLEncoder.encode(key, "UTF-8"));
             result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append(URLEncoder.encode(value, "UTF-8"));
         }
         return result.toString();
     }
@@ -174,7 +183,7 @@ public class NotificationListener9 extends NotificationListenerService {
         super.onNotificationRemoved(sbn);
     }
 
-    private void saveNotification(NotificationItem item) {
+    private void saveNotification(HistoryItem item) {
         System.out.println("Saved notification!");
 
         Context context = getApplicationContext();

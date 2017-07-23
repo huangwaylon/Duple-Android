@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.waylonhuang.notifydesktop.NotificationItem;
 import com.waylonhuang.notifydesktop.NotificationSQLiteHelper;
 import com.waylonhuang.notifydesktop.R;
 
@@ -58,10 +57,12 @@ public class HistoryFragment extends Fragment {
 
         final NotificationSQLiteHelper helper = NotificationSQLiteHelper.getInstance(getActivity());
 
-        final FlexibleAdapter<NotificationItem> adapter = new FlexibleAdapter<>(new ArrayList<NotificationItem>());
+        final FlexibleAdapter<HistoryItem> adapter = new FlexibleAdapter<>(new ArrayList<HistoryItem>());
         final FastScroller fastScroller = (FastScroller) view.findViewById(R.id.his_list_fs);
-
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.his_list_rv);
+        final TextView emptyView = (TextView) view.findViewById(R.id.empty_view);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.history_sfl);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -70,7 +71,6 @@ public class HistoryFragment extends Fragment {
         // Add fast scroller after rv is added to adapter.
         adapter.setFastScroller(fastScroller);
         adapter.setDisplayHeadersAtStartUp(true).setStickyHeaders(true);
-
         adapter.addListener(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
@@ -78,18 +78,17 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.history_sfl);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 adapter.updateDataSet(organizeItems(helper));
                 swipeRefreshLayout.setRefreshing(false);
+
+                refreshView(recyclerView, emptyView, adapter);
             }
         });
 
         adapter.updateDataSet(organizeItems(helper));
-
-        final TextView emptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // Setup filter and receiver.
         deleteFilter = new IntentFilter(DELETE_INTENT);
@@ -102,7 +101,12 @@ public class HistoryFragment extends Fragment {
             }
         };
 
+        refreshView(recyclerView, emptyView, adapter);
 
+        return view;
+    }
+
+    private void refreshView(RecyclerView recyclerView, TextView emptyView, FlexibleAdapter<HistoryItem> adapter) {
         if (adapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -110,8 +114,6 @@ public class HistoryFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-
-        return view;
     }
 
     @Override
@@ -134,15 +136,15 @@ public class HistoryFragment extends Fragment {
         Snackbar.make(view, "Pull down to refresh", Snackbar.LENGTH_SHORT).show();
     }
 
-    private List<NotificationItem> organizeItems(NotificationSQLiteHelper helper) {
-        List<NotificationItem> appItems = helper.getAllItems(getActivity());
+    private List<HistoryItem> organizeItems(NotificationSQLiteHelper helper) {
+        List<HistoryItem> appItems = helper.getAllItems(getActivity());
 
         long curr = 0;
         HistoryItemHeader header = null;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
 
-        for (NotificationItem item : appItems) {
+        for (HistoryItem item : appItems) {
             int day = 1000 * 60 * 24;
             long droppedMillis = day * (item.getTime() / day);
 

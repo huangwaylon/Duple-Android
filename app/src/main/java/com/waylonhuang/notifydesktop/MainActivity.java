@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setup our theme colors depending on the user's settings.
         final SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
         int themeColor = settings.getInt("theme_color", RED_COLOR);
         if (themeColor == BLUE_COLOR) {
@@ -104,18 +107,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Default fragment to select.
         navDrawerSelectedIndex = R.id.nav_apps;
 
+        // User should have the notification listener service enabled and should be signed in.
         boolean signedIn = settings.getBoolean("signedIn", false);
-        if (!signedIn) {
+        boolean notificationEnabled = NotificationManagerCompat.getEnabledListenerPackages(this).contains(getPackageName());
+        if (!signedIn || !notificationEnabled) {
             navDrawerSelectedIndex = R.id.nav_setup;
         }
+
+        // Set the current fragment to the one that was saved (for rotation).
         if (savedInstanceState != null) {
             navDrawerSelectedIndex = savedInstanceState.getInt(NAV_DRAWER_SELECT_KEY);
         }
 
+        // Check the correct item in the navigation drawer and switch to the fragment.
         navigationView.setCheckedItem(navDrawerSelectedIndex);
         switchToFragment(navDrawerSelectedIndex);
 
-        // Setup filter and receiver.
+        // Setup filter and receiver for receiving the done signal from the setup wizard.
         finishFilter = new IntentFilter(FINISH_INTENT);
         finishReceiver = new BroadcastReceiver() {
             @Override
@@ -126,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
+        // Start battery service.
+        Intent batteryIntent = new Intent(this, BatteryService.class);
+        startService(batteryIntent);
+
+        // Get our ads ready.
         MobileAds.initialize(this, REAL_AD_ID);
         final AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -217,29 +230,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+        // Check if the selected index is the current item.
+        if (item.getItemId() == navDrawerSelectedIndex) {
+            // Close the drawer.
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
+
         navDrawerSelectedIndex = item.getItemId();
         return switchToFragment(navDrawerSelectedIndex);
     }
 
     private boolean switchToFragment(int id) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        String tag;
+
+        fab.hide();
 
         Fragment fragment;
         if (id == R.id.nav_apps) {
-            fragment = AppListFragment.newInstance();
-            fab.hide();
+            tag = "apps";
+            fragment = getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = AppListFragment.newInstance();
+            }
         } else if (id == R.id.nav_setup) {
-            fragment = WizardFragment.newInstance();
-            fab.hide();
+            tag = "setup";
+            fragment = getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = WizardFragment.newInstance();
+            }
         } else if (id == R.id.nav_history) {
-            fragment = HistoryFragment.newInstance();
-            fab.hide();
+            tag = "history";
+            fragment = getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = HistoryFragment.newInstance();
+            }
         } else {
-            // Settings.
-            fragment = SettingsFragment.newInstance();
-            fab.hide();
+            tag = "settings";
+            fragment = getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = SettingsFragment.newInstance();
+            }
         }
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment, "TAG").commit();
+
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment, tag).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

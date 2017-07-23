@@ -1,18 +1,23 @@
 package com.waylonhuang.notifydesktop.setupwizard;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.layer_net.stepindicator.StepIndicator;
+import com.badoualy.stepperindicator.StepperIndicator;
 import com.waylonhuang.notifydesktop.R;
+
+import static com.waylonhuang.notifydesktop.setupwizard.SignInFragment.LIFE_CYCLE_INTENT;
 
 public class WizardFragment extends Fragment {
     private ViewPager mPager;
@@ -30,9 +35,10 @@ public class WizardFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.wtf("WIZARD", "onCreate");
+        setRetainInstance(false);
     }
 
     @Override
@@ -49,8 +55,8 @@ public class WizardFragment extends Fragment {
         mPager.setAdapter(mPagerAdapter);
 
         // Bind the step indicator to the adapter.
-        StepIndicator stepIndicator = (StepIndicator) view.findViewById(R.id.step_indicator);
-        stepIndicator.setupWithViewPager(mPager);
+        StepperIndicator indicator = (StepperIndicator) view.findViewById(R.id.step_indicator);
+        indicator.setViewPager(mPager);
 
         return view;
     }
@@ -78,5 +84,13 @@ public class WizardFragment extends Fragment {
         public int getCount() {
             return 4;
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.wtf("WIZARD", "onPause");
+        Intent intent = new Intent(LIFE_CYCLE_INTENT);
+        getActivity().sendBroadcast(intent);
     }
 }

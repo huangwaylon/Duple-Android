@@ -92,14 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("theme_color", Integer.parseInt((String) newValue));
                     editor.apply();
-
-                    String message = "Restart app to apply new theme!";
-                    View view = getView();
-                    if (view != null) {
-                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                    }
+                    getActivity().recreate();
                 }
                 return true;
             }
@@ -115,6 +108,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
                     editor.putBoolean("history", (Boolean) newValue);
                     editor.apply();
                 }
+                return true;
+            }
+        });
+
+        Preference clearHistoryPref = (Preference) findPreference("clear_history");
+        clearHistoryPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                clearHistory();
                 return true;
             }
         });
@@ -203,12 +204,31 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
                 editor.putInt("theme_color", RED_COLOR);
                 editor.apply();
 
-                View view = getView();
-                if (view != null) {
-                    Snackbar.make(view, "Preferences reset", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Preferences reset", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getActivity(), "Preferences reset", Toast.LENGTH_SHORT).show();
+                getActivity().recreate();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void clearHistory() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setMessage("Delete all local notification records")
+                .setTitle("Clear History");
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                final NotificationSQLiteHelper helper = NotificationSQLiteHelper.getInstance(getActivity());
+                helper.deleteAllItems();
+                Snackbar.make(getView(), "History cleared", Snackbar.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
