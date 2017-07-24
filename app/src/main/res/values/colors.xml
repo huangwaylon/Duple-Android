@@ -28,4 +28,6 @@
     <color name="teal_primary_dark">#00796B</color>
     <color name="teal_primary_light">#B2DFDB</color>
     <color name="teal_accent">#607D8B</color>
+
+    <color name="icon_grey_tint">#757575</color>
 </resources>
