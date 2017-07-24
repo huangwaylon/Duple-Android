@@ -1,9 +1,11 @@
 package com.waylonhuang.notifydesktop.applist;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,23 +14,28 @@ import com.waylonhuang.notifydesktop.R;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
  * Created by Waylon on 7/15/2017.
  */
 
-public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implements Comparable<AppItem> {
+public class AppItem extends AbstractItem<AppItem.MyViewHolder> {
+    public static final int TITLE_ONLY_INTENT = 0;
+    public static final int NOTIFY_OFF_INTENT = 1;
+
+    public static final String APP_ITEM_INTENT = "APP_ITEM_INTENT";
 
     private Drawable icon;
-    private String appName;
     private String packageName;
 
     private boolean isOff, isTitleOnly;
+    private Context context;
 
-    public AppItem(String appName, String packageName, Drawable icon, boolean isOff, boolean isTitleOnly) {
-        this.appName = appName;
+    public AppItem(Context context, String appName, String packageName, Drawable icon, boolean isOff, boolean isTitleOnly) {
+        this.context = context;
+
+        this.id = appName;
         this.packageName = packageName;
         this.icon = icon;
 
@@ -56,17 +63,12 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
         return icon;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getId() {
+        return id;
     }
 
     public String getPackageName() {
         return packageName;
-    }
-
-    @Override
-    public int compareTo(@NonNull AppItem o) {
-        return this.appName.compareTo(o.appName);
     }
 
     @Override
@@ -89,58 +91,62 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
     }
 
     @Override
-    public MyViewHolder createViewHolder(View view, FlexibleAdapter adapter) {
+    public MyViewHolder createViewHolder(final View view, FlexibleAdapter adapter) {
         return new MyViewHolder(view, adapter);
     }
 
     @Override
     public void bindViewHolder(FlexibleAdapter adapter, MyViewHolder holder, int position, List payloads) {
         holder.app_icon_iv.setImageDrawable(icon);
-        holder.app_name_tv.setText(appName);
+        holder.app_name_tv.setText(id);
         holder.app_detail_tv.setText(packageName);
 
-        if (isOff && isTitleOnly) {
-            holder.app_off.setVisibility(View.VISIBLE);
-            holder.app_title_only.setVisibility(View.VISIBLE);
-
-            holder.app_name_tv.setPadding(0, 0, 60, 0);
-            setMargins(holder.app_title_only, 0, 0, 65, 0);
-        } else if (isOff) {
-            holder.app_off.setVisibility(View.VISIBLE);
-            holder.app_title_only.setVisibility(View.GONE);
-
-            holder.app_name_tv.setPadding(0, 0, 40, 0);
-            setMargins(holder.app_title_only, 0, 0, 65, 0);
-        } else if (isTitleOnly) {
-            holder.app_off.setVisibility(View.GONE);
-            holder.app_title_only.setVisibility(View.VISIBLE);
-
-            holder.app_name_tv.setPadding(0, 0, 30, 0);
-            setMargins(holder.app_title_only, 0, 0, 0, 0);
+        if (isTitleOnly()) {
+            holder.titleButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_visibility_off_black_24dp));
         } else {
-            holder.app_off.setVisibility(View.GONE);
-            holder.app_title_only.setVisibility(View.GONE);
-
-            holder.app_name_tv.setPadding(0, 0, 0, 0);
-            setMargins(holder.app_title_only, 0, 0, 65, 0);
+            holder.titleButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_visibility_black_24dp));
         }
+
+        if (isOff()) {
+            holder.notificationButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_off_black_24dp));
+        } else {
+            holder.notificationButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_black_24dp));
+        }
+
+        holder.titleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTitleOnly(!isTitleOnly);
+                sendIntent(TITLE_ONLY_INTENT, isTitleOnly);
+            }
+        });
+
+        holder.notificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setOff(!isOff);
+                sendIntent(NOTIFY_OFF_INTENT, isOff);
+            }
+        });
     }
 
-    public static void setMargins (View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
+    private void sendIntent(int intentType, boolean state) {
+        Intent intent = new Intent(APP_ITEM_INTENT);
+        intent.putExtra("package", packageName);
+        intent.putExtra("type", intentType);
+        intent.putExtra("off", state);
+        intent.putExtra("app", id);
+        context.sendBroadcast(intent);
     }
+
 
     public static class MyViewHolder extends FlexibleViewHolder {
         public ImageView app_icon_iv;
         public TextView app_name_tv;
         public TextView app_detail_tv;
 
-        public TextView app_off;
-        public TextView app_title_only;
+        public ImageButton titleButton;
+        public ImageButton notificationButton;
 
         public MyViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
@@ -148,8 +154,8 @@ public class AppItem extends AbstractFlexibleItem<AppItem.MyViewHolder> implemen
             app_name_tv = (TextView) view.findViewById(R.id.app_name_tv);
             app_detail_tv = (TextView) view.findViewById(R.id.app_detail_tv);
 
-            app_off = (TextView) view.findViewById(R.id.app_off);
-            app_title_only = (TextView) view.findViewById(R.id.app_title_only);
+            titleButton = (ImageButton) view.findViewById(R.id.visible_toggle);
+            notificationButton = (ImageButton) view.findViewById(R.id.notification_toggle);
         }
     }
 }

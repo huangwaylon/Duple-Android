@@ -13,60 +13,60 @@
         android:scaleType="fitCenter"
         android:src="@mipmap/ic_launcher" />
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="40dp"
-        android:orientation="vertical">
+        android:layout_centerVertical="true">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="70dp"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/app_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="65dp"
                 android:text="Gmail Email and Contacts"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/app_title_only"
-                android:layout_width="25dp"
+                android:id="@+id/app_detail_tv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="35dp"
-                android:background="@drawable/rounded_corner"
-                android:gravity="center"
-                android:padding="3dp"
-                android:text="NC"
-                android:textColor="#fff"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:text="20 notifications"
+                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/app_off"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/rounded_corner_dark"
-                android:gravity="center"
-                android:padding="3dp"
-                android:text="OFF"
-                android:textColor="#fff"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/app_detail_tv"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/visible_toggle"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:text="20 notifications"
-            android:textSize="12sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="40dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_visibility_black_24dp"
+            android:tint="#757575" />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/notification_toggle"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_notifications_black_24dp"
+            android:tint="#757575" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

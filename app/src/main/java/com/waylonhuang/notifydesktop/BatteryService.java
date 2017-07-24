@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import static android.os.BatteryManager.BATTERY_STATUS_DISCHARGING;
 import static android.os.BatteryManager.BATTERY_STATUS_FULL;
 
 /**
@@ -21,6 +22,8 @@ public class BatteryService extends Service {
     private static final String TAG = BatteryService.class.getSimpleName();
 
     private BroadcastReceiver batteryChangeReceiver;
+
+    private boolean sendMessage;
 
     @Override
     public void onCreate() {
@@ -34,6 +37,8 @@ public class BatteryService extends Service {
                 checkBatteryLevel(intent);
             }
         };
+
+        sendMessage = true;
 
         registerReceiver(batteryChangeReceiver, batteryChangeFilter);
     }
@@ -59,7 +64,8 @@ public class BatteryService extends Service {
 
     private void checkBatteryLevel(Intent batteryChangeIntent) {
         int status = batteryChangeIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        if (status == BATTERY_STATUS_FULL) {
+
+        if (sendMessage && status == BATTERY_STATUS_FULL) {
             Log.d(TAG, "Battery full.");
 
             NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -70,6 +76,10 @@ public class BatteryService extends Service {
             notificationBuilder.setSmallIcon(R.drawable.sb_small_icon);
             notificationBuilder.setAutoCancel(true);
             nManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
+
+            sendMessage = false;
+        } else if (status == BATTERY_STATUS_DISCHARGING) {
+            sendMessage = true;
         }
     }
 }

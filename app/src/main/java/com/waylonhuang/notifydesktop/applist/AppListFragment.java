@@ -1,6 +1,10 @@
 package com.waylonhuang.notifydesktop.applist;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -32,14 +36,17 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.common.FlexibleItemDecoration;
 
 import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
+import static com.waylonhuang.notifydesktop.applist.AppItem.APP_ITEM_INTENT;
+import static com.waylonhuang.notifydesktop.applist.AppItem.NOTIFY_OFF_INTENT;
 
 public class AppListFragment extends Fragment {
     private Set<String> offList;
     private Set<String> titleList;
 
-    private List<AppItem> appItems;
+    private FlexibleAdapter<AbstractItem> adapter;
 
-    private FlexibleAdapter<AppItem> adapter;
+    private BroadcastReceiver appItemReceiver;
+    private IntentFilter appItemFilter;
 
     public AppListFragment() {
     }
@@ -55,15 +62,51 @@ public class AppListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // mParam1 = getArguments().getString(ARG_PARAM1);
-        }
+
+        // Setup filter and receiver for receiving the done signal from the setup wizard.
+        appItemFilter = new IntentFilter(APP_ITEM_INTENT);
+        appItemReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String pkg = intent.getStringExtra("package");
+                String app = intent.getStringExtra("app");
+                boolean off = intent.getBooleanExtra("off", true);
+                if (intent.getIntExtra("type", NOTIFY_OFF_INTENT) == NOTIFY_OFF_INTENT) {
+                    if (off) {
+                        offList.add(pkg);
+                    } else {
+                        offList.remove(pkg);
+                    }
+                } else {
+                    if (off) {
+                        titleList.add(pkg);
+                    } else {
+                        titleList.remove(pkg);
+                    }
+                }
+                View view = getView();
+                if (view != null) {
+                    Snackbar.make(view, "Updated settings for " + app, Snackbar.LENGTH_SHORT).show();
+                }
+                adapter.notifyDataSetChanged();
+
+                saveSettings();
+            }
+        };
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
+        saveSettings();
+
+        if (appItemReceiver != null) {
+            getActivity().unregisterReceiver(appItemReceiver);
+        }
+    }
+
+    private void saveSettings() {
         SharedPreferences settings = getActivity().getSharedPreferences(PREFS_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
 
@@ -71,6 +114,12 @@ public class AppListFragment extends Fragment {
         editor.putString("titleOnlyApps", TextUtils.join(",", titleList));
 
         editor.apply();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(appItemReceiver, appItemFilter);
     }
 
     @Override
@@ -93,9 +142,11 @@ public class AppListFragment extends Fragment {
         offList = new HashSet<>(Arrays.asList(offArr));
         titleList = new HashSet<>(Arrays.asList(titleApps));
 
-        appItems = getAppList();
+        List<AbstractItem> appItems = getAppList();
         Collections.sort(appItems);
         adapter = new FlexibleAdapter<>(appItems);
+        adapter.addScrollableHeader(new ScrollableLayoutItem("headerItem", "Toggle off to disable notification mirroring.", "Toggle off to hide the content of mirrored notifications."));
+
         final FastScroller fastScroller = (FastScroller) view.findViewById(R.id.app_list_fs);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.app_list_rv);
@@ -109,8 +160,10 @@ public class AppListFragment extends Fragment {
         adapter.addListener(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
-                AppItem item = adapter.getItem(position);
-                showAlert(item);
+                AbstractItem item = adapter.getItem(position);
+                if (item instanceof AppItem) {
+                    showAlert((AppItem) item);
+                }
                 return false;
             }
         });
@@ -118,8 +171,8 @@ public class AppListFragment extends Fragment {
         return view;
     }
 
-    private List<AppItem> getAppList() {
-        List<AppItem> items = new ArrayList<>();
+    private List<AbstractItem> getAppList() {
+        List<AbstractItem> items = new ArrayList<>();
         PackageManager pm = getActivity().getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
@@ -133,7 +186,7 @@ public class AppListFragment extends Fragment {
                 boolean isOff = offList.contains(packageName);
                 boolean isTitleOnly = titleList.contains(packageName);
 
-                AppItem item = new AppItem(name, packageName, icon, isOff, isTitleOnly);
+                AppItem item = new AppItem(getActivity(), name, packageName, icon, isOff, isTitleOnly);
                 items.add(item);
             } else {
                 // System App.
@@ -156,7 +209,7 @@ public class AppListFragment extends Fragment {
         selectedItems[1] = defTitle;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(item.getAppName());
+        builder.setTitle(item.getId());
         builder.setMultiChoiceItems(items, selectedItems,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -186,8 +239,10 @@ public class AppListFragment extends Fragment {
 
                         View view = getView();
                         if (view != null) {
-                            Snackbar.make(view, "Updated settings for " + item.getAppName(), Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, "Updated settings for " + item.getId(), Snackbar.LENGTH_SHORT).show();
                         }
+
+                        saveSettings();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
