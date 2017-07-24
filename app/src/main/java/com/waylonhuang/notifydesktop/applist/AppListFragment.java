@@ -146,7 +146,7 @@ public class AppListFragment extends Fragment {
     private void showAlert(final AppItem item) {
         AlertDialog dialog;
 
-        final CharSequence[] items = {"Turn off notifications", "Show title only"};
+        final CharSequence[] items = {"Turn off notifications", "Don't show content"};
 
         final boolean defOff = item.isOff();
         final boolean defTitle = item.isTitleOnly();

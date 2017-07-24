@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
                 Log.wtf("Ads", "onAdLoaded");
-                FrameLayout frameLayout = (FrameLayout) findViewById(R.id.flContent);
+                View frameLayout = findViewById(R.id.coordinator_layout);
                 setMargins(frameLayout, 0, 0, 0, mAdView.getHeight());
             }
 

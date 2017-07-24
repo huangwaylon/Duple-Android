@@ -30,7 +30,7 @@ import static com.waylonhuang.notifydesktop.MainActivity.PREFS_FILE;
  * Created by Waylon on 6/19/2017.
  */
 
-public class NotificationListener12 extends NotificationListenerService {
+public class NotificationListener16 extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -85,8 +85,57 @@ public class NotificationListener12 extends NotificationListenerService {
 
         Notification notification = sbn.getNotification();
         Bundle extras = notification.extras;
-        String title = extras.getString("android.title");
-        String text = extras.getString("android.text");
+        String title = appName;
+
+        CharSequence titleSequence = null;
+        // title = extras.getString(Notification.EXTRA_TITLE);
+        try {
+            titleSequence = extras.getCharSequence(Notification.EXTRA_TITLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (titleSequence != null) {
+            title = titleSequence.toString();
+        }
+
+        String text = "";
+        if (packageName.equals("com.google.android.gm")) {
+            // Case for Gmail.
+            if (android.os.Build.VERSION.SDK_INT > 21) {
+                CharSequence body = null;
+                try {
+                    body = extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (body != null) {
+                    text = body.toString();
+                }
+            } else {
+                CharSequence subject = null;
+                try {
+                    subject = extras.getCharSequence(Notification.EXTRA_TEXT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (subject != null) {
+                    text = subject.toString();
+                }
+            }
+        } else {
+            CharSequence extraText = null;
+            try {
+                extraText = extras.getCharSequence(Notification.EXTRA_TEXT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (extraText != null) {
+                text = extraText.toString();
+            }
+        }
 
         // Check if the user does not want to include the content of the notification.
         if (Arrays.asList(titleApps).contains(packageName)) {
@@ -96,7 +145,7 @@ public class NotificationListener12 extends NotificationListenerService {
         // Send notification to server.
         post(uid, appName, title, text, postTime, packageName);
 
-        System.out.println("Posted!");
+        // System.out.println("Posted!");
 
         // Check if history is enabled.
         if (history) {
@@ -184,7 +233,7 @@ public class NotificationListener12 extends NotificationListenerService {
     }
 
     private void saveNotification(HistoryItem item) {
-        System.out.println("Saved notification!");
+        // System.out.println("Saved notification!");
 
         Context context = getApplicationContext();
         NotificationSQLiteHelper helper = NotificationSQLiteHelper.getInstance(context);
