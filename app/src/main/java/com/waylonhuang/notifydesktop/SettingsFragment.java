@@ -13,6 +13,7 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,11 @@ import static com.waylonhuang.notifydesktop.MainActivity.TEST_AD_ID;
  */
 
 public class SettingsFragment extends PreferenceFragmentCompat implements RewardedVideoAdListener {
+    private static final String TAG = SettingsFragment.class.getSimpleName();
+
+    public static final String APP_ID = "ca-app-pub-1189993122998448~5476081412";
+    public static final String AD_UNIT_ID = "ca-app-pub-1189993122998448/8699036115";
+
     public static final int RED_COLOR = 0;
     public static final int BLUE_COLOR = 1;
     public static final int GREEN_COLOR = 2;
@@ -68,7 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
     }
 
     private void loadRewardedVideoAd() {
-        mAd.loadAd(REAL_AD_ID, new AdRequest.Builder().build());
+        mAd.loadAd(AD_UNIT_ID, new AdRequest.Builder().build());
     }
 
     @Override
@@ -260,41 +266,38 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Reward
     // Required to reward the user.
     @Override
     public void onRewarded(RewardItem reward) {
-        Toast.makeText(getActivity(), "onRewarded! currency: " + reward.getType() + "  amount: " + reward.getAmount(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Video complete! currency: " + reward.getType() + "  amount: " + reward.getAmount(), Toast.LENGTH_SHORT).show();
         // Reward the user.
-    }
-
-    // The following listener methods are optional.
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-//        Toast.makeText(getActivity(), "onRewardedVideoAdLeftApplication", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRewardedVideoAdClosed() {
-//        Toast.makeText(getActivity(), "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int errorCode) {
-//        Toast.makeText(getActivity(), "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-        System.out.println("Failed to load video ad.");
+        Log.wtf(TAG, "onRewardedVideoAdClosed");
     }
 
     @Override
     public void onRewardedVideoAdLoaded() {
-//        Toast.makeText(getActivity(), "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
-        System.out.println("Loaded video ad!");
+        Log.wtf(TAG, "onRewardedVideoAdLoaded");
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        Log.wtf(TAG, "onRewardedVideoAdFailedToLoad");
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        Log.wtf(TAG, "onRewardedVideoAdLeftApplication");
     }
 
     @Override
     public void onRewardedVideoAdOpened() {
-//        Toast.makeText(getActivity(), "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+        Log.wtf(TAG, "onRewardedVideoAdOpened");
     }
 
     @Override
     public void onRewardedVideoStarted() {
-//        Toast.makeText(getActivity(), "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+        Log.wtf(TAG, "onRewardedVideoStarted");
     }
 
     @Override

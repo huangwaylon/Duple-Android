@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="icon_disable_color">#e57373</color>
+    <color name="icon_enable_color">#757575</color>
+    <color name="background_disable_color">#eeeeee</color>
+    <color name="background_enable_color">#ffffff</color>
+
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="primary_light">#FFCDD2</color>
@@ -28,6 +33,4 @@
     <color name="teal_primary_dark">#00796B</color>
     <color name="teal_primary_light">#B2DFDB</color>
     <color name="teal_accent">#607D8B</color>
-
-    <color name="icon_grey_tint">#757575</color>
 </resources>

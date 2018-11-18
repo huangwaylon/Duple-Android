@@ -14,8 +14,8 @@ android {
         applicationId "com.waylonhuang.desktopnotification"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 10
-        versionName "5.6"
+        versionCode 11
+        versionName "5.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
@@ -37,7 +37,6 @@ dependencies {
 
     compile ('com.github.badoualy:stepper-indicator:1.0.7'){ exclude group: 'com.android.support', module: 'appcompat-v7' }
     compile 'eu.davidea:flexible-adapter:5.0.0-rc2'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     compile 'com.android.support:preference-v7:25.4.0'
     compile 'com.android.support:preference-v14:25.4.0'
     compile 'com.android.support:appcompat-v7:25.4.0'

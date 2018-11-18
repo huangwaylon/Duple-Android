@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -103,14 +104,18 @@ public class AppItem extends AbstractItem<AppItem.MyViewHolder> {
 
         if (isTitleOnly()) {
             holder.titleButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_visibility_off_black_24dp));
+            holder.titleButton.setColorFilter(ContextCompat.getColor(context, R.color.icon_disable_color));
         } else {
             holder.titleButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_visibility_black_24dp));
+            holder.titleButton.setColorFilter(ContextCompat.getColor(context, R.color.icon_enable_color));
         }
 
         if (isOff()) {
             holder.notificationButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_off_black_24dp));
+            holder.notificationButton.setColorFilter(ContextCompat.getColor(context, R.color.icon_disable_color));
         } else {
             holder.notificationButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_black_24dp));
+            holder.notificationButton.setColorFilter(ContextCompat.getColor(context, R.color.icon_enable_color));
         }
 
         holder.titleButton.setOnClickListener(new View.OnClickListener() {
